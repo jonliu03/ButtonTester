@@ -9,6 +9,7 @@ function App() {
 
   useEffect(() => {
     socket.on('buttonPress', (number) => {
+      console.log(`Button pressed: ${number}`);
       setButtonNumber(number);
     });
 
