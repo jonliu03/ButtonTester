@@ -10,10 +10,10 @@ for buttonId in buttonMapping:
 
 # For the rotary switch (knob):
 clk = 17  # Clock pin
-dt = 27   # Data pin
+dt = 18   # Data pin
 # Setup rotary encoder pins
-GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 clkLastState = GPIO.input(clk)
 
 server_address = 'http://localhost:3000/api/button_press'
@@ -30,24 +30,22 @@ def send_api_request(buttonId):
     except Exception as e:
         print(f"Error occurred: {e}")
 
-def rotary_callback(clk):
-    global clkLastState
+while True: 
+    for buttonId, buttonPin in buttonMapping.items():
+        if (GPIO.input(buttonPin) == True):
+            while (GPIO.input(buttonPin) == True):
+                sleep(0.05)
+            print(buttonId)
+            send_api_request(buttonId)
+    
     clkState = GPIO.input(clk)
     dtState = GPIO.input(dt)
     if clkState != clkLastState:
         if dtState != clkState:
-            print("rightKnob")
-            send_api_request('rightKnob')
+            print("Clockwise")
+            send_api_request("rightKnob")
         else:
-            print("leftKnob")
-            send_api_request('leftKnob')
-    clkLastState = clkState
-GPIO.add_event_detect(clk, GPIO.BOTH, callback=rotary_callback, bouncetime=300)
-
-while True: 
-    for buttonId, buttonPin in buttonMapping.items():
-        if (GPIO.input(buttonPin) == True):
-            print(buttonId)
-            send_api_request(buttonId)
-          
+            print("CounterClockwise")
+            send_api_request("leftKnob")
+        clkLastState = clkState
     sleep(0.1)
