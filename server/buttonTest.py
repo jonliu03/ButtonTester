@@ -3,7 +3,7 @@ import requests
 
 def send_api_request():
     url = "http://localhost:3000/api/button_press"
-    payload = {"buttonNumber": "right"}  # Modify payload as needed
+    payload = {"buttonNumber": "select"}  # Modify payload as needed
     try:
         response = requests.post(url, json=payload)
         if response.status_code == 200:
@@ -14,7 +14,7 @@ def send_api_request():
         print(f"Error occurred: {e}")
 
 def on_key_press(event):
-    if event.name == 'right':
+    if event.name == 'space':
         print('Right key pressed')
         send_api_request()
 
