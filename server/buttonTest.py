@@ -3,7 +3,7 @@ import requests
 
 def send_api_request():
     url = "http://localhost:3000/api/button_press"
-    payload = {"buttonNumber": "select"}  # Modify payload as needed
+    payload = {"buttonNumber": "SElect"}  # Modify payload as needed
     try:
         response = requests.post(url, json=payload)
         if response.status_code == 200:
