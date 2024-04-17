@@ -15,6 +15,7 @@ dt = 18   # Data pin
 GPIO.setup(clk, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(dt, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 clkLastState = GPIO.input(clk)
+counter = 0
 
 server_address = 'http://localhost:3000/api/button_press'
 
@@ -32,20 +33,28 @@ def send_api_request(buttonId):
 
 while True: 
     for buttonId, buttonPin in buttonMapping.items():
-        if (GPIO.input(buttonPin) == True):
-            while (GPIO.input(buttonPin) == True):
+        if buttonPin != 23 and GPIO.input(buttonPin):
+            while GPIO.input(buttonPin):
+                sleep(0.05)
+            print(buttonId)                                                                                                                                                   
+            send_api_request(buttonId)
+        elif buttonPin == 23 and not GPIO.input(buttonPin):
+            while not GPIO.input(buttonPin):
                 sleep(0.05)
             print(buttonId)
             send_api_request(buttonId)
-    
     clkState = GPIO.input(clk)
     dtState = GPIO.input(dt)
     if clkState != clkLastState:
         if dtState != clkState:
-            print("Clockwise")
-            send_api_request("rightKnob")
+            counter = (counter + 1) % 2
+            if counter == 0:
+                print("Clockwise")
+                send_api_request("rightKnob")
         else:
-            print("CounterClockwise")
-            send_api_request("leftKnob")
+            counter = (counter - 1) % 2
+            if counter == 0:
+                print("CounterClockwise")
+                send_api_request("leftKnob")
         clkLastState = clkState
-    sleep(0.1)
+    sleep(0.00001)
