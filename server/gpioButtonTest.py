@@ -35,7 +35,8 @@ while True:
     for buttonId, buttonPin in buttonMapping.items():
         if buttonId != 'SElect' and GPIO.input(buttonPin):
             if buttonId == 'TimeAudio' or buttonId == 'TitleAudio':
-                send_api_request(buttonId + 'Start')
+                print(buttonId)
+                send_api_request(f"{buttonId}Start")
             while GPIO.input(buttonPin):
                 sleep(0.05)
             print(buttonId)                                                                                                                                                   
