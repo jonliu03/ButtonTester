@@ -33,12 +33,14 @@ def send_api_request(buttonId):
 
 while True: 
     for buttonId, buttonPin in buttonMapping.items():
-        if buttonPin != 23 and GPIO.input(buttonPin):
+        if buttonId != 'SElect' and GPIO.input(buttonPin):
+            if buttonId == 'TimeAudio' or buttonId == 'TitleAudio':
+                send_api_request(buttonId + 'Start')
             while GPIO.input(buttonPin):
                 sleep(0.05)
             print(buttonId)                                                                                                                                                   
             send_api_request(buttonId)
-        elif buttonPin == 23 and not GPIO.input(buttonPin):
+        elif buttonId == 'SElect' and not GPIO.input(buttonPin):
             while not GPIO.input(buttonPin):
                 sleep(0.05)
             print(buttonId)
